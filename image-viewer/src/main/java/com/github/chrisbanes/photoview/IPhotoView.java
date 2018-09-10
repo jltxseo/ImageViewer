@@ -5,7 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
+/**
+ * @author jltxseo
+ *         Created by junlintianxia on 2018/09/11.
+ * @version V1.0
+ * @Description
+ */
 public interface IPhotoView extends IAttacher{
 
     ImageView getImageView();

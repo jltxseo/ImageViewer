@@ -1,7 +1,9 @@
 package com.liyi.example.activity;
 
 import android.graphics.Point;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +14,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.github.chrisbanes.photoview.PhotoDraweeView;
 import com.liyi.example.R;
 import com.liyi.example.Utils;
 import com.liyi.example.adapter.RecyclerAdp;
@@ -64,14 +69,52 @@ public class VerticalFrescoListAty extends BaseActivity {
         imagePreview.setImageLoader(new ImageLoader<String>() {
             @Override
             public void displayImage(final int position, String src, final ImageView imageView) {
-                GlideUtil.loadImage(VerticalFrescoListAty.this, src, new SimpleTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        imageView.setImageDrawable(resource);
-                        mViewList.get(position).setImageWidth(resource.getIntrinsicWidth());
-                        mViewList.get(position).setImageHeight(resource.getIntrinsicHeight());
+                final BaseScaleView scaleImageView = (BaseScaleView) imageView.getParent();
+                if (imageView instanceof PhotoDraweeView) {
+                    PhotoDraweeView draweeView = (PhotoDraweeView) imageView;
+                    GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
+                    if (hierarchy != null) {
+                        hierarchy.setFadeDuration(300);
+                        hierarchy.setFailureImage(R.drawable.img_viewer_placeholder);
                     }
-                });
+                    draweeView.setHierarchy(hierarchy);
+                    draweeView.setOnLoadListener(new PhotoDraweeView.OnPhotoDraweeViewLoadListener() {
+                        @Override
+                        public void onLoadStarted() {
+                            scaleImageView.showProgess();
+                        }
+
+                        @Override
+                        public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                            scaleImageView.hideProgress();
+                            if (imageInfo != null) {
+                                mViewList.get(position).setImageWidth(imageInfo.getWidth());
+                                mViewList.get(position).setImageHeight(imageInfo.getHeight());
+                            }
+                        }
+
+                        @Override
+                        public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
+                            scaleImageView.hideProgress();
+                            if (imageInfo != null) {
+                                mViewList.get(position).setImageWidth(imageInfo.getWidth());
+                                mViewList.get(position).setImageHeight(imageInfo.getHeight());
+                            }
+                        }
+
+                        @Override
+                        public void onIntermediateImageFailed(String id, Throwable throwable) {
+                            scaleImageView.hideProgress();
+                        }
+
+                        @Override
+                        public void onFailure(String id, Throwable throwable) {
+                            scaleImageView.hideProgress();
+                        }
+                    });
+                    draweeView.setPhotoUri(Uri.parse(src));
+
+                }
             }
         });
     }

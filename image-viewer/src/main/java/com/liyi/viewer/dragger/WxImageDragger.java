@@ -41,7 +41,6 @@ public class WxImageDragger extends ImageDragger {
         final ViewData viewData = scaleImageView.getViewData();
         final ImageView imageView = scaleImageView.getImageView();
         mImageParams = (FrameLayout.LayoutParams) imageView.getLayoutParams();
-//        Drawable drawable = imageView.getDrawable();
         RectF photoViewDisplayRect = scaleImageView.getPhotoViewDisplayRect();
         if (photoViewDisplayRect != null) {
             mOriImg_width = photoViewDisplayRect.width();
