@@ -16,7 +16,7 @@ import com.liyi.viewer.ViewData;
 import com.liyi.viewer.listener.OnImageChangedListener;
 import com.liyi.viewer.listener.OnItemClickListener;
 import com.liyi.viewer.listener.OnPreviewStatusListener;
-import com.liyi.viewer.widget.ScaleImageView;
+import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
 
 /**
@@ -78,7 +78,7 @@ public class CustomPreviewAty extends BaseActivity {
         // 设置图片的切换监听
         imagePreview.setOnImageChangedListener(new OnImageChangedListener() {
             @Override
-            public void onImageSelected(int position, ScaleImageView view) {
+            public void onImageSelected(int position, BaseScaleView view) {
                 tv_cover_index.setText("我是图片" + (position + 1) + "号");
             }
         });
@@ -98,7 +98,7 @@ public class CustomPreviewAty extends BaseActivity {
         // 设置图片预览器的状态监听
         imagePreview.setOnPreviewStatusListener(new OnPreviewStatusListener() {
             @Override
-            public void onPreviewStatus(int state, ScaleImageView imagePager) {
+            public void onPreviewStatus(int state, BaseScaleView imagePager) {
                 if (state == ImageViewerState.STATE_COMPLETE_OPEN) {
                     coverView.setVisibility(View.VISIBLE);
                 } else if (state == ImageViewerState.STATE_COMPLETE_CLOSE) {

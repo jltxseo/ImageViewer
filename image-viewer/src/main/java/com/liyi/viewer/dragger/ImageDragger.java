@@ -3,7 +3,7 @@ package com.liyi.viewer.dragger;
 import android.graphics.drawable.Drawable;
 
 import com.liyi.viewer.ImageViewerState;
-import com.liyi.viewer.widget.ScaleImageView;
+import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewerAttacher;
 
 /**
@@ -25,7 +25,7 @@ public class ImageDragger {
     protected float mPreviewWidth, mPreviewHeight;
     // 图片拖拽状态监听
     protected ImageDraggerStateListener mStateListener;
-    protected ScaleImageView scaleImageView;
+    protected BaseScaleView scaleImageView;
     protected ImageViewerAttacher mAttacher;
 
 
@@ -33,7 +33,7 @@ public class ImageDragger {
 
     }
 
-    public void bindScaleImageView(ScaleImageView scaleImageView) {
+    public void bindScaleImageView(BaseScaleView scaleImageView) {
         this.scaleImageView = scaleImageView;
     }
 
@@ -70,7 +70,9 @@ public class ImageDragger {
         mPreviewWidth = width;
         mPreviewHeight = height;
         calculateValue(mPreviewHeight);
-        if (checkAttacherNotNull()) mAttacher.setViewPagerScrollable(false);
+        if (checkAttacherNotNull()) {
+            mAttacher.setViewPagerScrollable(false);
+        }
         setImageDraggerState(ImageDraggerState.DRAG_STATE_READY);
     }
 
@@ -131,7 +133,7 @@ public class ImageDragger {
      * @param state      {@link ImageViewerState}
      * @param imagePager
      */
-    public void setPreviewStatus(@ImageViewerState int state, ScaleImageView imagePager) {
+    public void setPreviewStatus(@ImageViewerState int state, BaseScaleView imagePager) {
         if (checkAttacherNotNull()) {
             mAttacher.setPreviewStatus(state, imagePager);
         }

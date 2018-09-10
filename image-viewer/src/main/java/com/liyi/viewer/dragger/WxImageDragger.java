@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.liyi.viewer.ImageViewerState;
 import com.liyi.viewer.ViewData;
-import com.liyi.viewer.widget.ScaleImageView;
+import com.liyi.viewer.widget.BaseScaleView;
 
 public class WxImageDragger extends ImageDragger {
     // 恢复原样的动画时间
@@ -36,7 +36,7 @@ public class WxImageDragger extends ImageDragger {
     }
 
     @Override
-    public void bindScaleImageView(ScaleImageView scaleImageView) {
+    public void bindScaleImageView(BaseScaleView scaleImageView) {
         super.bindScaleImageView(scaleImageView);
         final ViewData viewData = scaleImageView.getViewData();
         final ImageView imageView = scaleImageView.getImageView();

@@ -19,8 +19,9 @@ import com.liyi.example.glide.GlideUtil;
 import com.liyi.viewer.ImageLoader;
 import com.liyi.viewer.ImageViewerUtil;
 import com.liyi.viewer.ViewData;
+import com.liyi.viewer.dragger.ImageDraggerType;
 import com.liyi.viewer.listener.OnPreviewStatusListener;
-import com.liyi.viewer.widget.ScaleImageView;
+import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
 
 /**
@@ -57,6 +58,8 @@ public class VerticalListAty extends BaseActivity {
         mImageList = Utils.getImageList();
         mAdapter.setData(mImageList);
         initData();
+        imagePreview.doDrag(true);
+        imagePreview.setDragType(ImageDraggerType.DRAG_TYPE_WX);
         imagePreview.setImageData(mImageList);
         imagePreview.setImageLoader(new ImageLoader<String>() {
             @Override
@@ -106,7 +109,7 @@ public class VerticalListAty extends BaseActivity {
 
         imagePreview.setOnPreviewStatusListener(new OnPreviewStatusListener() {
             @Override
-            public void onPreviewStatus(int state, ScaleImageView imagePager) {
+            public void onPreviewStatus(int state, BaseScaleView imagePager) {
                 if (state == com.liyi.viewer.ImageViewerState.STATE_READY_CLOSE) {
                     int top = getTop(imagePreview.getCurrentPosition());
                     ViewData viewData = mViewList.get(imagePreview.getCurrentPosition());

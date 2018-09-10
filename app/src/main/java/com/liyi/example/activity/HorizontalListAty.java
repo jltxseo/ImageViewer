@@ -19,7 +19,7 @@ import com.liyi.viewer.ImageLoader;
 import com.liyi.viewer.ImageViewerUtil;
 import com.liyi.viewer.ViewData;
 import com.liyi.viewer.listener.OnPreviewStatusListener;
-import com.liyi.viewer.widget.ScaleImageView;
+import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
 
 /**
@@ -103,7 +103,7 @@ public class HorizontalListAty extends BaseActivity {
 
         imagePreview.setOnPreviewStatusListener(new OnPreviewStatusListener() {
             @Override
-            public void onPreviewStatus(int state, ScaleImageView imagePager) {
+            public void onPreviewStatus(int state, BaseScaleView imagePager) {
                 if (state == com.liyi.viewer.ImageViewerState.STATE_READY_CLOSE) {
                     // 每次退出浏览时，都将图片显示在中间位置
                     ViewData viewData = mViewList.get(imagePreview.getCurrentPosition());

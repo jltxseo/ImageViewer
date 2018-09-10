@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.IPhotoView;
 import com.liyi.viewer.ImageLoader;
 import com.liyi.viewer.ImageViewerState;
 import com.liyi.viewer.ImageViewerUtil;
@@ -144,7 +144,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         if (indexView.getVisibility() == View.VISIBLE) {
             indexView.setText((position + 1) + "/" + mImageDataList.size());
         }
-        final ScaleImageView scaleImageView = getCurrentView();
+        final BaseScaleView scaleImageView = getCurrentView();
         if (scaleImageView != null) {
             scaleImageView.setScale(1f);
             if (mImageChangedListener != null) {
@@ -189,7 +189,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      *
      * @return
      */
-    public ScaleImageView createItemView(final int position) {
+    public BaseScaleView createItemView(final int position) {
         final ScaleImageView itemView = new ScaleImageView(container.getContext());
         return setupItemViewConfig(position, itemView);
     }
@@ -200,7 +200,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      * @param position
      * @param itemView
      */
-    public ScaleImageView setupItemViewConfig(int position, ScaleImageView itemView) {
+    public BaseScaleView setupItemViewConfig(int position, BaseScaleView itemView) {
         itemView.setId(position);
         itemView.setPosition(position);
         itemView.setScaleable(isImageScaleable);
@@ -210,7 +210,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         if (mViewDataList != null && mViewDataList.size() > position) {
             itemView.setViewData(mViewDataList.get(position));
         }
-        final PhotoView imageView = (PhotoView) itemView.getImageView();
+        final IPhotoView imageView = (IPhotoView) itemView.getImageView();
         imageView.setX(0);
         imageView.setY(0);
         imageView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
@@ -224,7 +224,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
             itemView.clearImageDragger();
         }
         if (mImageLoader != null) {
-            mImageLoader.displayImage(position, mImageDataList.get(position), imageView);
+            mImageLoader.displayImage(position, mImageDataList.get(position), imageView != null ? imageView.getImageView() : null);
         }
         itemView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         return itemView;
@@ -235,7 +235,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      */
     public void watch() {
         viewPager.setScrollable(true);
-        ScaleImageView scaleImageView = createItemView(mStartPosition);
+        BaseScaleView scaleImageView = createItemView(mStartPosition);
         if (mPreviewAdapter == null) {
             mPreviewAdapter = new PreviewAdapter(this);
             mPreviewAdapter.setStartView(scaleImageView);
@@ -256,7 +256,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         }
     }
 
-    public void enterWithAnim(final ScaleImageView scaleImageView) {
+    public void enterWithAnim(final BaseScaleView scaleImageView) {
         viewPager.setScrollable(false);
         scaleImageView.setPosition(mStartPosition);
         scaleImageView.setViewData(mViewDataList.get(mStartPosition));
@@ -279,7 +279,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         });
     }
 
-    private void enter(ScaleImageView scaleImageView) {
+    private void enter(BaseScaleView scaleImageView) {
         setBackgroundAlpha(255);
         handleImageIndex();
         viewPager.setScrollable(true);
@@ -305,7 +305,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         indexView.setVisibility(View.GONE);
         final int position = getCurrentPosition();
         final ViewData viewData = mViewDataList.get(position);
-        final ScaleImageView scaleImageView = getCurrentView();
+        final BaseScaleView scaleImageView = getCurrentView();
         scaleImageView.setPosition(position);
         scaleImageView.setViewData(viewData);
         scaleImageView.setDuration(mDuration);
@@ -344,9 +344,15 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      */
     public void clear() {
         exit();
-        if (mImageDataList != null && mImageDataList.size() > 0) mImageDataList.clear();
-        if (mViewDataList != null && mViewDataList.size() > 0) mViewDataList.clear();
-        if (mPreviewAdapter != null) mPreviewAdapter.clear();
+        if (mImageDataList != null && mImageDataList.size() > 0) {
+            mImageDataList.clear();
+        }
+        if (mViewDataList != null && mViewDataList.size() > 0) {
+            mViewDataList.clear();
+        }
+        if (mPreviewAdapter != null) {
+            mPreviewAdapter.clear();
+        }
         mImageChangedListener = null;
         mItemClickListener = null;
         mItemLongClickListener = null;
@@ -404,7 +410,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     }
 
     public float getImageScale() {
-        final ScaleImageView scaleImageView = getCurrentView();
+        final BaseScaleView scaleImageView = getCurrentView();
         return scaleImageView != null ? scaleImageView.getScale() : 1f;
     }
 
@@ -432,7 +438,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         return viewPager != null ? viewPager.getCurrentItem() : 0;
     }
 
-    public ScaleImageView getCurrentView() {
+    public BaseScaleView getCurrentView() {
         return mPreviewAdapter != null ? mPreviewAdapter.getViewByPosition(getCurrentPosition()) : null;
     }
 
@@ -442,7 +448,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     }
 
     public boolean isImageAnimRunning() {
-        ScaleImageView scaleImageView = getCurrentView();
+        BaseScaleView scaleImageView = getCurrentView();
         if (scaleImageView != null) {
             return scaleImageView.isImageAnimRunning();
         }
@@ -465,7 +471,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         this.mPreviewStatusListener = listener;
     }
 
-    public void setPreviewStatus(int state, ScaleImageView scaleImageView) {
+    public void setPreviewStatus(int state, BaseScaleView scaleImageView) {
         mViewState = state;
         if (mPreviewStatusListener != null) {
             mPreviewStatusListener.onPreviewStatus(state, scaleImageView);
@@ -475,10 +481,10 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     /**
      * 图片手势类事件监听类
      */
-    private class ImageGestureListener implements View.OnClickListener, View.OnLongClickListener {
-        private ScaleImageView scaleImageView;
+    public class ImageGestureListener implements View.OnClickListener, View.OnLongClickListener {
+        private BaseScaleView scaleImageView;
 
-        public ImageGestureListener(ScaleImageView scaleImageView) {
+        public ImageGestureListener(BaseScaleView scaleImageView) {
             this.scaleImageView = scaleImageView;
         }
 
@@ -491,7 +497,9 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
                 if (mItemClickListener != null) {
                     final boolean result = mItemClickListener.onItemClick(scaleImageView.getPosition(), scaleImageView.getImageView());
                     // 判断是否消费了单击事件，如果消费了，则单击事件的后续方法不执行
-                    if (result) return;
+                    if (result){
+                        return;
+                    }
                 }
                 close();
             }
