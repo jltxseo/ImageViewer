@@ -16,6 +16,12 @@
             <enum name="classic" value="1" />
             <enum name="wechat" value="2" />
         </attr>
+
+        <attr name="ivr_photo_view_type">
+            <enum name="image_view" value="1" />
+            <enum name="drawee_view" value="2" />
+        </attr>
+
         <!--是否允许图片缩放-->
         <attr name="ivr_scaleable" format="boolean" />
     </declare-styleable>

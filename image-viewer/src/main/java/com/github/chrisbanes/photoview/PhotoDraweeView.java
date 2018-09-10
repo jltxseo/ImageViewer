@@ -30,6 +30,8 @@ public class PhotoDraweeView extends SimpleDraweeView implements IPhotoView {
 
     private boolean mEnableDraweeMatrix = true;
 
+    private  OnPhotoDraweeViewLoadListener onLoadListener;
+
     public PhotoDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
         super(context, hierarchy);
         init();
@@ -215,13 +217,18 @@ public class PhotoDraweeView extends SimpleDraweeView implements IPhotoView {
     }
 
     public void setPhotoUri(Uri uri) {
-        setPhotoUri(uri, null);
+        setPhotoUri(null,uri);
     }
 
-    public void setPhotoUri(Uri uri, @Nullable Context context) {
+    public void setPhotoUri(@Nullable Context context,Uri uri) {
+        setPhotoUri(context,uri,true);
+    }
+
+    public void setPhotoUri(@Nullable Context context,Uri uri,boolean isAutoAnimation) {
         mEnableDraweeMatrix = false;
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setCallerContext(context)
+                .setAutoPlayAnimations(isAutoAnimation)
                 .setUri(uri)
                 .setOldController(getController())
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
@@ -229,6 +236,9 @@ public class PhotoDraweeView extends SimpleDraweeView implements IPhotoView {
                     public void onFailure(String id, Throwable throwable) {
                         super.onFailure(id, throwable);
                         mEnableDraweeMatrix = false;
+                        if(onLoadListener != null){
+                            onLoadListener.onFailure(id,throwable);
+                        }
                     }
 
                     @Override
@@ -239,12 +249,18 @@ public class PhotoDraweeView extends SimpleDraweeView implements IPhotoView {
                         if (imageInfo != null) {
                             update(imageInfo.getWidth(), imageInfo.getHeight());
                         }
+                        if(onLoadListener != null){
+                            onLoadListener.onFinalImageSet(id,imageInfo,animatable);
+                        }
                     }
 
                     @Override
                     public void onIntermediateImageFailed(String id, Throwable throwable) {
                         super.onIntermediateImageFailed(id, throwable);
                         mEnableDraweeMatrix = false;
+                        if(onLoadListener != null){
+                            onLoadListener.onIntermediateImageFailed(id,throwable);
+                        }
                     }
 
                     @Override
@@ -254,9 +270,55 @@ public class PhotoDraweeView extends SimpleDraweeView implements IPhotoView {
                         if (imageInfo != null) {
                             update(imageInfo.getWidth(), imageInfo.getHeight());
                         }
+                        if(onLoadListener != null){
+                            onLoadListener.onIntermediateImageSet(id,imageInfo);
+                        }
                     }
                 })
                 .build();
+        if(onLoadListener != null){
+            onLoadListener.onLoadStarted();
+        }
         setController(controller);
+    }
+
+    public void setOnLoadListener(OnPhotoDraweeViewLoadListener onLoadListener) {
+        this.onLoadListener = onLoadListener;
+    }
+
+    public interface OnPhotoDraweeViewLoadListener{
+        /**
+         * 开始加载图片
+         */
+         void onLoadStarted();
+
+        /**
+         * 图片加载成功后会被回调
+         * @param id
+         * @param imageInfo
+         * @param animatable
+         */
+         void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable);
+
+        /**
+         * 图片解码成功后会被回调
+         * @param id
+         * @param imageInfo
+         */
+         void onIntermediateImageSet(String id, ImageInfo imageInfo);
+
+        /**
+         * 图片解码失败后会被回调
+         * @param id
+         * @param throwable
+         */
+         void onIntermediateImageFailed(String id, Throwable throwable);
+
+        /**
+         * 图片加载失败后会被回调
+         * @param id
+         * @param throwable
+         */
+        void onFailure(String id, Throwable throwable);
     }
 }

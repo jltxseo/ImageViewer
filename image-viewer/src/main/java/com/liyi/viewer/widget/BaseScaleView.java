@@ -340,7 +340,11 @@ public abstract class BaseScaleView extends FrameLayout {
     }
 
     public ImageView getImageView() {
-        return imageView.getImageView();
+        return imageView != null ? imageView.getImageView() : null;
+    }
+
+    public IPhotoView getPhotoView(){
+        return imageView;
     }
 
     public void showProgess() {

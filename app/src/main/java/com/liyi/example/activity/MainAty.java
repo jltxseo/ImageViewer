@@ -41,7 +41,7 @@ public class MainAty extends Activity {
                 break;
 
             case R.id.btn_image_pager:
-                startActivity(new Intent(MainAty.this, ImagePagerAty.class));
+                startActivity(new Intent(MainAty.this, SimpleFrescoPreivewAty.class));
                 break;
         }
     }

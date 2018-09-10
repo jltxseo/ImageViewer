@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.IPhotoView;
+import com.github.chrisbanes.photoview.PhotoViewType;
 import com.liyi.viewer.ImageLoader;
 import com.liyi.viewer.ImageViewerState;
 import com.liyi.viewer.ImageViewerUtil;
@@ -80,6 +81,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     // 预览状态监听器
     private OnPreviewStatusListener mPreviewStatusListener;
 
+    private @PhotoViewType int mPhotoViewType;
 
     public ImageViewerAttacher(FrameLayout frameLayout, AttributeSet attrs) {
         this.container = frameLayout;
@@ -95,6 +97,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
                 showIndex = a.getBoolean(R.styleable.ImageViewer_ivr_show_index, true);
                 doDrag = a.getBoolean(R.styleable.ImageViewer_ivr_do_drag, true);
                 mDragType = a.getInteger(R.styleable.ImageViewer_ivr_drag_type, ImageDraggerType.DRAG_TYPE_DEFAULT);
+                mPhotoViewType = a.getInteger(R.styleable.ImageViewer_ivr_photo_view_type, PhotoViewType.PHOTO_IMAGE_VIEW);
                 doEnterAnim = a.getBoolean(R.styleable.ImageViewer_ivr_do_enter, true);
                 doExitAnim = a.getBoolean(R.styleable.ImageViewer_ivr_do_exit, true);
                 mDuration = a.getInteger(R.styleable.ImageViewer_ivr_duration, DEF_DURATION);
@@ -108,6 +111,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         showIndex = true;
         doDrag = true;
         mDragType = ImageDraggerType.DRAG_TYPE_DEFAULT;
+        mPhotoViewType = PhotoViewType.PHOTO_IMAGE_VIEW;
         doEnterAnim = true;
         doExitAnim = true;
         mDuration = DEF_DURATION;
@@ -190,8 +194,14 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      * @return
      */
     public BaseScaleView createItemView(final int position) {
-        final ScaleImageView itemView = new ScaleImageView(container.getContext());
-        return setupItemViewConfig(position, itemView);
+        BaseScaleView baseScaleView;
+        if(mPhotoViewType == PhotoViewType.PHOTO_DRAWEE_VIEW){
+            baseScaleView = new ScaleDraweeView(container.getContext());
+        }else {
+            baseScaleView = new ScaleImageView(container.getContext());
+        }
+
+        return setupItemViewConfig(position, baseScaleView);
     }
 
     /**

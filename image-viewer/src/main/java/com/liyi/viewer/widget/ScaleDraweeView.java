@@ -28,4 +28,13 @@ public class ScaleDraweeView extends BaseScaleView {
     public IPhotoView createPhotoView(Context context) {
         return new PhotoDraweeView(context);
     }
+
+    @Override
+    public void recycle() {
+        super.recycle();
+        IPhotoView iPhotoView = getPhotoView();
+        if(iPhotoView instanceof PhotoDraweeView){
+            ((PhotoDraweeView)iPhotoView).setOnLoadListener(null);
+        }
+    }
 }

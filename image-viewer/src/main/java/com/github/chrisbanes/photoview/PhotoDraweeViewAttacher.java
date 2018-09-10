@@ -30,7 +30,7 @@ import java.lang.ref.WeakReference;
  * @version V1.0
  * @Description
  */
-public class PhotoDraweeViewAttacher implements IAttacher, View.OnTouchListener, OnGestureListener {
+public class PhotoDraweeViewAttacher implements IAttacher, View.OnTouchListener, OnDraweeViewGestureListener {
 
     private static final int EDGE_NONE = -1;
     private static final int EDGE_LEFT = 0, EDGE_TOP = 0;
@@ -431,6 +431,11 @@ public class PhotoDraweeViewAttacher implements IAttacher, View.OnTouchListener,
         mCurrentFlingRunnable.fling(getViewWidth(), getViewHeight(), (int) velocityX,
                 (int) velocityY);
         draweeView.post(mCurrentFlingRunnable);
+    }
+
+    @Override
+    public void onScaleEnd() {
+        checkMinScale();
     }
 
     @Override

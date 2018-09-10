@@ -31,7 +31,7 @@ public class ScaleDragDetector implements ScaleGestureDetector.OnScaleGestureLis
     private final float mTouchSlop;
     private final float mMinimumVelocity;
     private final ScaleGestureDetector mScaleDetector;
-    private final OnGestureListener mScaleDragGestureListener;
+    private final OnDraweeViewGestureListener mScaleDragGestureListener;
 
     private VelocityTracker mVelocityTracker;
     private boolean mIsDragging;
@@ -46,7 +46,7 @@ public class ScaleDragDetector implements ScaleGestureDetector.OnScaleGestureLis
      * @version V1.0
      * @Description
      */
-    public ScaleDragDetector(Context context, OnGestureListener scaleDragGestureListener) {
+    public ScaleDragDetector(Context context, OnDraweeViewGestureListener scaleDragGestureListener) {
         mScaleDetector = new ScaleGestureDetector(context, this);
         mScaleDragGestureListener = scaleDragGestureListener;
 
@@ -74,6 +74,7 @@ public class ScaleDragDetector implements ScaleGestureDetector.OnScaleGestureLis
 
     @Override
     public void onScaleEnd(ScaleGestureDetector detector) {
+        mScaleDragGestureListener.onScaleEnd();
     }
 
     public boolean isScaling() {

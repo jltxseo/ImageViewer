@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.liyi.viewer.widget.BaseScaleView;
-import com.liyi.viewer.widget.ScaleImageView;
 import com.liyi.viewer.widget.ImageViewerAttacher;
 
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class PreviewAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         // 回收图片，释放内存
         if (object != null) {
-            ((ScaleImageView) object).recycle();
+            ((BaseScaleView) object).recycle();
         }
         // 移除页面
         container.removeView((View) object);
