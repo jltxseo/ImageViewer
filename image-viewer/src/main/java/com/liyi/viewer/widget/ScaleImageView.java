@@ -35,7 +35,7 @@ public class ScaleImageView extends BaseScaleView {
     public RectF getPhotoViewDisplayRect() {
         IPhotoView iPhotoView = getPhotoView();
         if(iPhotoView instanceof PhotoImageView){
-            Drawable d = iPhotoView.getDrawable();
+            Drawable d = iPhotoView.getImageView().getDrawable();
             if (d != null) {
                 RectF mDisplayRect = new RectF();
                 mDisplayRect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());

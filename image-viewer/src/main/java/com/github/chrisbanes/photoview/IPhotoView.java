@@ -28,7 +28,6 @@ public interface IPhotoView extends IAttacher{
     void setLayoutParams(ViewGroup.LayoutParams params);
     void setOnClickListener(View.OnClickListener l);
     void setScaleType(ImageView.ScaleType scaleType);
-    Drawable getDrawable();
     int getWidth();
     int getHeight();
 }

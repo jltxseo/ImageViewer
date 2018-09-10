@@ -542,8 +542,7 @@ public abstract class BaseScaleView extends FrameLayout {
         if (photoViewDisplayRect != null) {
             oriImg_width = photoViewDisplayRect.width();
             oriImg_height = photoViewDisplayRect.height();
-        } else
-            if (mViewData.getImageWidth() != 0 && mViewData.getImageHeight() != 0) {
+        } else if (mViewData.getImageWidth() != 0 && mViewData.getImageHeight() != 0) {
             oriImg_width = mViewData.getImageWidth();
             oriImg_height = mViewData.getImageHeight();
         }
