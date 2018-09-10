@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -87,6 +88,32 @@ public class PhotoDraweeView extends SimpleDraweeView implements IPhotoView {
     protected void onDetachedFromWindow() {
         mAttacher.onDetachedFromWindow();
         super.onDetachedFromWindow();
+    }
+
+    @Override
+    public void setScaleType(ScaleType scaleType){
+        if(scaleType == ScaleType.CENTER){
+            GenericDraweeHierarchy hierarchy = getHierarchy();
+            hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
+        }else if(scaleType == ScaleType.CENTER_CROP){
+            GenericDraweeHierarchy hierarchy = getHierarchy();
+            hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+        }else if(scaleType == ScaleType.CENTER_INSIDE){
+            GenericDraweeHierarchy hierarchy = getHierarchy();
+            hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
+        }else if(scaleType == ScaleType.FIT_CENTER){
+            GenericDraweeHierarchy hierarchy = getHierarchy();
+            hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+        }else if(scaleType == ScaleType.FIT_START){
+            GenericDraweeHierarchy hierarchy = getHierarchy();
+            hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_START);
+        }else if(scaleType == ScaleType.FIT_END){
+            GenericDraweeHierarchy hierarchy = getHierarchy();
+            hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_END);
+        }else if(scaleType == ScaleType.FIT_XY){
+            GenericDraweeHierarchy hierarchy = getHierarchy();
+            hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.FIT_XY);
+        }
     }
 
     @Override

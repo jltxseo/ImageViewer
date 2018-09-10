@@ -5,7 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.FloatEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
+import android.graphics.RectF;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -107,10 +107,10 @@ public class DefaultImageDragger extends ImageDragger {
         final float imageViewY = imageView.getY();
         // 图片的原始宽高
         float oriImg_width = 0, oriImg_height = 0;
-        Drawable drawable = imageView.getDrawable();
-        if (drawable != null) {
-            oriImg_width = drawable.getIntrinsicWidth();
-            oriImg_height = drawable.getIntrinsicHeight();
+        RectF photoViewDisplayRect = scaleImageView.getPhotoViewDisplayRect();
+        if (photoViewDisplayRect != null) {
+            oriImg_width = photoViewDisplayRect.width();
+            oriImg_height = photoViewDisplayRect.height();
         } else if (viewData.getImageWidth() != 0 && viewData.getImageHeight() != 0) {
             oriImg_width = viewData.getImageWidth();
             oriImg_height = viewData.getImageHeight();

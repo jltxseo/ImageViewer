@@ -1,6 +1,7 @@
 package com.liyi.viewer.widget;
 
 import android.content.Context;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -36,5 +37,18 @@ public class ScaleDraweeView extends BaseScaleView {
         if(iPhotoView instanceof PhotoDraweeView){
             ((PhotoDraweeView)iPhotoView).setOnLoadListener(null);
         }
+    }
+
+    @Override
+    public RectF getPhotoViewDisplayRect() {
+        IPhotoView iPhotoView = getPhotoView();
+        if(iPhotoView instanceof PhotoDraweeView){
+            PhotoDraweeView photoDraweeView = (PhotoDraweeView)iPhotoView;
+            RectF mDisplayRect = new RectF();
+            mDisplayRect.set(0.0F, 0.0F, -1F, -1F);
+            photoDraweeView.getHierarchy().getActualImageBounds(mDisplayRect);
+            return mDisplayRect;
+        }
+        return null;
     }
 }

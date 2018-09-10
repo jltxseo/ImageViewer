@@ -60,4 +60,26 @@
         android:text="单个页面"
         android:textColor="#ffffff"
         android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_simple_fresco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:layout_margin="10dp"
+        android:background="#222222"
+        android:text="简单预览(Fresco)"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_vertical_list_fresco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:layout_margin="10dp"
+        android:background="#222222"
+        android:text="纵向列表(Fresco)"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
 </LinearLayout>

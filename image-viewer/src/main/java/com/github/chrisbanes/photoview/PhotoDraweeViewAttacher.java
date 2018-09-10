@@ -347,6 +347,15 @@ public class PhotoDraweeViewAttacher implements IAttacher, View.OnTouchListener,
         return mDisplayRect;
     }
 
+    public int getImageInfoHeight() {
+        return mImageInfoHeight;
+    }
+
+    public int getmImageInfoWidth() {
+        return mImageInfoWidth;
+    }
+
+
     private void updateBaseMatrix() {
         if (mImageInfoWidth == -1 && mImageInfoHeight == -1) {
             return;

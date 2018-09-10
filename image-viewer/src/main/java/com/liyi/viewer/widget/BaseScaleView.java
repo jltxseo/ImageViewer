@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.FloatEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -521,6 +522,8 @@ public abstract class BaseScaleView extends FrameLayout {
         animator.start();
     }
 
+    public abstract RectF getPhotoViewDisplayRect();
+
     /**
      * 执行退场动画
      */
@@ -535,15 +538,19 @@ public abstract class BaseScaleView extends FrameLayout {
         }
         // 图片的原始宽高
         float oriImg_width = 0, oriImg_height = 0;
-        Drawable drawable = imageView.getDrawable();
-        if (drawable != null) {
-            oriImg_width = drawable.getIntrinsicWidth();
-            oriImg_height = drawable.getIntrinsicHeight();
-        } else if (mViewData.getImageWidth() != 0 && mViewData.getImageHeight() != 0) {
+        RectF photoViewDisplayRect = getPhotoViewDisplayRect();
+        if (photoViewDisplayRect != null) {
+            oriImg_width = photoViewDisplayRect.width();
+            oriImg_height = photoViewDisplayRect.height();
+        } else
+            if (mViewData.getImageWidth() != 0 && mViewData.getImageHeight() != 0) {
             oriImg_width = mViewData.getImageWidth();
             oriImg_height = mViewData.getImageHeight();
         }
+
+
         final float scale = Math.min(previewW / oriImg_width, previewH / oriImg_height);
+
         // 图片的缩放等级为 1f 时的宽高
         final float adjustImg_width = oriImg_width * scale;
         final float adjustImg_height = oriImg_height * scale;

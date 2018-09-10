@@ -39,6 +39,9 @@
             android:name=".activity.VerticalListAty"
             android:launchMode="singleTask" />
 
+        <activity android:name=".activity.VerticalFrescoListAty"
+            android:launchMode="singleTask" />
+
         <activity
             android:name=".activity.ImagePagerAty"
             android:launchMode="singleTask" />

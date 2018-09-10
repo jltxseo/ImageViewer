@@ -5,7 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.FloatEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
+import android.graphics.RectF;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -41,10 +41,11 @@ public class WxImageDragger extends ImageDragger {
         final ViewData viewData = scaleImageView.getViewData();
         final ImageView imageView = scaleImageView.getImageView();
         mImageParams = (FrameLayout.LayoutParams) imageView.getLayoutParams();
-        Drawable drawable = imageView.getDrawable();
-        if (drawable != null) {
-            mOriImg_width = drawable.getIntrinsicWidth();
-            mOriImg_height = drawable.getIntrinsicHeight();
+//        Drawable drawable = imageView.getDrawable();
+        RectF photoViewDisplayRect = scaleImageView.getPhotoViewDisplayRect();
+        if (photoViewDisplayRect != null) {
+            mOriImg_width = photoViewDisplayRect.width();
+            mOriImg_height = photoViewDisplayRect.height();
         } else if (viewData.getImageWidth() != 0 && viewData.getImageHeight() != 0) {
             mOriImg_width = viewData.getImageWidth();
             mOriImg_height = viewData.getImageHeight();
