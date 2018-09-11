@@ -7,5 +7,6 @@ import android.os.Parcelable;
  * Created by junlintianxia on 2018/09/11.
  */
 public interface IPhotoViewerLoadFactory extends Parcelable{
-    ImageLoader<?> creatImageLoader();
+    ImageLoader<?> createImageLoader();
+    PhotoViewerLifeCycle createPhotoViewerLifeCycle();
 }

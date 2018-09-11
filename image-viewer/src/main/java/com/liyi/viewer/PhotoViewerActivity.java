@@ -20,6 +20,10 @@ public class PhotoViewerActivity extends AppCompatActivity implements OnPreviewS
 
     private ImageViewer imagePreview;
     private PhotoExtParam extParam;
+    /**
+     * 生命周期回调接口
+     */
+    private PhotoViewerLifeCycle photoViewerLifeCycle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,10 +45,10 @@ public class PhotoViewerActivity extends AppCompatActivity implements OnPreviewS
             finish();
         }
         imagePreview = findViewById(R.id.imagePreivew);
-        initView();
+        initView(savedInstanceState);
     }
 
-    private void initView(){
+    private void initView(Bundle savedInstanceState){
         imagePreview.setOnPreviewStatusListener(this);
         imagePreview.setStartPosition(extParam.getStartPosition());
         if(extParam.getShowIndex() != null){
@@ -90,7 +94,8 @@ public class PhotoViewerActivity extends AppCompatActivity implements OnPreviewS
             try {
                 Class<? extends IPhotoViewerLoadFactory> factoryClass = extParam.getPhotoViewerLoadFactory() ;
                 IPhotoViewerLoadFactory factory = factoryClass.newInstance();
-                ImageLoader<?> imageLoader  = factory.creatImageLoader();
+                ImageLoader<?> imageLoader  = factory.createImageLoader();
+                photoViewerLifeCycle = factory.createPhotoViewerLifeCycle();
                 if(imageLoader != null){
                     imagePreview.setImageLoader(imageLoader);
                 }
@@ -99,8 +104,35 @@ public class PhotoViewerActivity extends AppCompatActivity implements OnPreviewS
         }
 
         imagePreview.watch();
+
+        if(photoViewerLifeCycle != null){
+            photoViewerLifeCycle.onCreate(this,savedInstanceState);
+        }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(photoViewerLifeCycle != null){
+            photoViewerLifeCycle.onResume(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(photoViewerLifeCycle != null){
+            photoViewerLifeCycle.onPause(this);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(photoViewerLifeCycle != null){
+            photoViewerLifeCycle.onDestroy(this);
+        }
+    }
 
     @Override
     public void onPreviewStatus(int state, BaseScaleView imagePager) {
@@ -117,7 +149,6 @@ public class PhotoViewerActivity extends AppCompatActivity implements OnPreviewS
     private void restoreState(Bundle savedInstanceState){
         extParam = savedInstanceState.getParcelable(KEY_PHOTO_PARAM);
     }
-
     /**
      * 保存状态
      * @param outState

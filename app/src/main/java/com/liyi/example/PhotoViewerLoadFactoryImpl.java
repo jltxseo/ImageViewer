@@ -1,8 +1,11 @@
 package com.liyi.example;
 
+import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -10,6 +13,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.chrisbanes.photoview.PhotoDraweeView;
 import com.liyi.viewer.IPhotoViewerLoadFactory;
 import com.liyi.viewer.ImageLoader;
+import com.liyi.viewer.PhotoViewerLifeCycle;
 import com.liyi.viewer.widget.BaseScaleView;
 
 /**
@@ -21,7 +25,7 @@ public class PhotoViewerLoadFactoryImpl implements IPhotoViewerLoadFactory{
     }
 
     @Override
-    public ImageLoader<String> creatImageLoader() {
+    public ImageLoader<String> createImageLoader() {
         return new ImageLoader<String>() {
             @Override
             public void displayImage(int position, String source, ImageView imageView) {
@@ -63,6 +67,31 @@ public class PhotoViewerLoadFactoryImpl implements IPhotoViewerLoadFactory{
                     draweeView.setPhotoUri(Uri.parse(source));
 
                 }
+            }
+        };
+    }
+
+    @Override
+    public PhotoViewerLifeCycle createPhotoViewerLifeCycle() {
+        return new PhotoViewerLifeCycle() {
+            @Override
+            public void onCreate(Context context, @Nullable Bundle savedInstanceState) {
+                super.onCreate(context, savedInstanceState);
+            }
+
+            @Override
+            public void onResume(Context context) {
+                super.onResume(context);
+            }
+
+            @Override
+            public void onPause(Context context) {
+                super.onPause(context);
+            }
+
+            @Override
+            public void onDestroy(Context context) {
+                super.onDestroy(context);
             }
         };
     }
