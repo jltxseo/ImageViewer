@@ -176,12 +176,12 @@ public class WxImageDragger extends ImageDragger {
         final ViewData viewData = scaleImageView.getViewData();
         final float from_x = mCurImgX;
         final float from_y = mCurImgY;
-        final float toX = viewData.getTargetX();
-        final float toY = viewData.getTargetY();
         final float old_width = mAdjustImgWidth * mCurScale;
         final float old_height = mAdjustImgHeight * mCurScale;
         final float new_width = viewData.getTargetWidth();
         final float new_height = viewData.getTargetHeight();
+        final float toX = new_width != 0 ? viewData.getTargetX() : mPreviewWidth / 2;
+        final float toY = new_height != 0 ? viewData.getTargetY() : mPreviewHeight /2;
         // 是否需要改变 imageView 的尺寸
         final boolean needChangeImageSize;
         if ((mCurImgX + mAdjustImgWidth * mCurScale) <= 0 || mCurImgX >= mPreviewWidth || mCurImgY >= mPreviewHeight) {
