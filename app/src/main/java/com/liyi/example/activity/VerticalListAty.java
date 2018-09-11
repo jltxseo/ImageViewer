@@ -80,7 +80,7 @@ public class VerticalListAty extends BaseActivity {
     private void initData() {
         mScreenSize = ImageViewerUtil.getScreenSize(this);
         for (int i = 0, len = mViewList.size(); i < len; i++) {
-            ViewData viewData = new ViewData();
+            ViewData viewData = mViewList.get(i);
             viewData.setTargetX(ImageViewerUtil.dp2px(this, 10));
             viewData.setTargetWidth(mScreenSize.x - ImageViewerUtil.dp2px(this, 20));
             viewData.setTargetHeight(ImageViewerUtil.dp2px(this, 200));

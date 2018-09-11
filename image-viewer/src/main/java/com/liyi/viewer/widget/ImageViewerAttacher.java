@@ -364,24 +364,27 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         final int position = getCurrentPosition();
         final ViewData viewData = mViewDataList.get(position);
         final BaseScaleView scaleImageView = getCurrentView();
-        scaleImageView.setPosition(position);
-        scaleImageView.setViewData(viewData);
-        scaleImageView.setDuration(mDuration);
-        scaleImageView.setDoBackgroundAlpha(false);
-        scaleImageView.cancel(new TransitionCallback() {
-            @Override
-            public void onTransitionRunning(float progress) {
-                super.onTransitionRunning(progress);
-                setBackgroundAlpha((int) ((1 - progress) * 255));
-                setPreviewStatus(ImageViewerState.STATE_CLOSING, scaleImageView);
-            }
+        if(scaleImageView != null){
+            scaleImageView.setPosition(position);
+            scaleImageView.setViewData(viewData);
+            scaleImageView.setDuration(mDuration);
+            scaleImageView.setDoBackgroundAlpha(false);
+            scaleImageView.cancel(new TransitionCallback() {
+                @Override
+                public void onTransitionRunning(float progress) {
+                    super.onTransitionRunning(progress);
+                    setBackgroundAlpha((int) ((1 - progress) * 255));
+                    setPreviewStatus(ImageViewerState.STATE_CLOSING, scaleImageView);
+                }
 
-            @Override
-            public void onTransitionEnd() {
-                super.onTransitionEnd();
-                exit();
-            }
-        });
+                @Override
+                public void onTransitionEnd() {
+                    super.onTransitionEnd();
+                    exit();
+                }
+            });
+        }
+
     }
 
     public void exit() {

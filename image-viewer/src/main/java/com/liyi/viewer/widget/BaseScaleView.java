@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.github.chrisbanes.photoview.IPhotoView;
+import com.github.chrisbanes.photoview.OnViewTapListener;
 import com.liyi.viewer.ImageViewerUtil;
 import com.liyi.viewer.TransitionCallback;
 import com.liyi.viewer.ViewData;
@@ -403,11 +404,11 @@ public abstract class BaseScaleView extends FrameLayout {
     }
 
     public void setOnViewClickListener(final OnClickListener listener) {
-        imageView.setOnClickListener(new OnClickListener() {
+        imageView.setOnViewTapListener(new OnViewTapListener() {
             @Override
-            public void onClick(View v) {
+            public void onViewTap(View view, float x, float y) {
                 if (!isImageAnimRunning && !isImageDragging && listener != null) {
-                    listener.onClick(v);
+                    listener.onClick(view);
                 }
             }
         });
