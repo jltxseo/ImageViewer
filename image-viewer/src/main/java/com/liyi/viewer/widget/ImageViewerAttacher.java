@@ -259,8 +259,12 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         itemView.setPosition(position);
         itemView.setScaleable(isImageScaleable);
         itemView.setDefSize(mScreenSize.x, mScreenSize.y);
-        if (mImageMaxScale > 0) itemView.setMaxScale(mImageMaxScale);
-        if (mImageMinScale > 0) itemView.setMinScale(mImageMinScale);
+        if (mImageMaxScale > 0){
+            itemView.setMaxScale(mImageMaxScale);
+        }
+        if (mImageMinScale > 0){
+            itemView.setMinScale(mImageMinScale);
+        }
         if (mViewDataList != null && mViewDataList.size() > position) {
             itemView.setViewData(mViewDataList.get(position));
         }
