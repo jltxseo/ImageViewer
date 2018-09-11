@@ -457,8 +457,8 @@ public abstract class BaseScaleView extends FrameLayout {
             new_height = previewH;
             hasImageSize = false;
         }
-        final float from_x = mViewData.getTargetX();
-        final float from_y = mViewData.getTargetY();
+        final float from_x = old_width != 0 ? mViewData.getTargetX() : previewW / 2;
+        final float from_y = old_height !=0 ? mViewData.getTargetY() : previewH / 2;
         final float to_x = (previewW - new_width) / 2;
         final float to_y = (previewH - new_height) / 2;
         if (doBackgroundAlpha && mBackground == null && getBackground() != null) {
