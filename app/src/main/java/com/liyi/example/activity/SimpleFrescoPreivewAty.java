@@ -17,6 +17,7 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.chrisbanes.photoview.PhotoDraweeView;
 import com.liyi.example.R;
+import com.liyi.example.Utils;
 import com.liyi.example.glide.GlideUtil;
 import com.liyi.grid.AutoGridView;
 import com.liyi.grid.adapter.SimpleAutoGridAdapter;
@@ -26,6 +27,8 @@ import com.liyi.viewer.dragger.ImageDraggerType;
 import com.liyi.viewer.listener.OnItemLongClickListener;
 import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
+
+import java.util.List;
 
 /**
  * 简单的图片预览
@@ -52,6 +55,7 @@ public class SimpleFrescoPreivewAty extends BaseActivity {
         autoGridView = findViewById(R.id.autoGridView);
 
         mGridAdp = new SimpleAutoGridAdapter();
+        List<String> mImageList = Utils.getImageList();
         mGridAdp.setSource(mImageList);
         mGridAdp.setImageLoader(new SimpleAutoGridAdapter.ImageLoader() {
             @Override
@@ -83,7 +87,6 @@ public class SimpleFrescoPreivewAty extends BaseActivity {
 
         imagePreview.doDrag(true);
         imagePreview.setDragType(ImageDraggerType.DRAG_TYPE_WX);
-        imagePreview.setImageData(mImageList);
         imagePreview.setImageLoader(new ImageLoader<String>() {
 
             @Override

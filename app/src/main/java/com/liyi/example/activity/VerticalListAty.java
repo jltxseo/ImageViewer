@@ -24,6 +24,8 @@ import com.liyi.viewer.listener.OnPreviewStatusListener;
 import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
 
+import java.util.List;
+
 /**
  * 竖向列表页面
  */
@@ -55,12 +57,11 @@ public class VerticalListAty extends BaseActivity {
         recyclerView.setLayoutManager(mLinearManager);
 
         mAdapter = new RecyclerAdp(1);
-        mImageList = Utils.getImageList();
+        List<String> mImageList = Utils.getImageList();
         mAdapter.setData(mImageList);
         initData();
         imagePreview.doDrag(true);
         imagePreview.setDragType(ImageDraggerType.DRAG_TYPE_WX);
-        imagePreview.setImageData(mImageList);
         imagePreview.setImageLoader(new ImageLoader<String>() {
             @Override
             public void displayImage(final int position, String src, final ImageView imageView) {
@@ -140,7 +141,7 @@ public class VerticalListAty extends BaseActivity {
                 th1 += ImageViewerUtil.dp2px(this, 210);
             }
             // 计算当前图片下方所有 Item 的总高度
-            for (int i = position + 1; i < mImageList.size(); i++) {
+            for (int i = position + 1; i < mViewList.size(); i++) {
                 // ImageViewerUtil.dp2px(this, 210) 是 Item 的高度
                 th2 += ImageViewerUtil.dp2px(this, 210);
             }

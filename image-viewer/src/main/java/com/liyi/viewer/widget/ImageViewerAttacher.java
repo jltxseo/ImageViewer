@@ -33,52 +33,93 @@ import java.util.List;
 
 
 public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
-    // 默认的动画执行时间
+    /**
+     * 默认的动画执行时间
+     */
     public static final int DEF_DURATION = 300;
 
-    // imageViewer 的容器
+    /**
+     * imageViewer 的容器
+     */
     private FrameLayout container;
-    // 图片序号
+    /**
+     * 图片序号
+     */
     private TextView indexView;
     private PreviewPager viewPager;
     private PreviewAdapter mPreviewAdapter;
 
-    // 屏幕尺寸
+    /**
+     * 屏幕尺寸
+     */
     private Point mScreenSize;
-    // 图片资源
-    private List mImageDataList;
+    /**
+     * 图片资源和数据
+     */
     private List<ViewData> mViewDataList;
-    // 预览的起始位置
+    /**
+     * 预览的起始位置
+     */
     private int mStartPosition;
-    // 是否显示图片位置
+    /**
+     * 是否显示图片位置
+     */
     private boolean showIndex;
-    // 图片是否可拖拽
+    /**
+     * 图片是否可拖拽
+     */
     private boolean doDrag;
-    // 图片的拖拽模式
+    /**
+     * 图片的拖拽模式
+     */
     private int mDragType;
-    // 是否执行进场动画
+    /**
+     * 是否执行进场动画
+     */
     private boolean doEnterAnim;
-    // 是否执行退场动画
+    /**
+     * 是否执行退场动画
+     */
     private boolean doExitAnim;
-    // 进退场动画的执行时间
+    /**
+     * 进退场动画的执行时间
+     */
     private int mDuration;
-    // 图片是否可缩放
+    /**
+     * 图片是否可缩放
+     */
     private boolean isImageScaleable;
-    // 最大的图片缩放等级
+    /**
+     * 最大的图片缩放等级
+     */
     private float mImageMaxScale;
-    // 最小的图片缩放等级
+    /**
+     * 最小的图片缩放等级
+     */
     private float mImageMinScale;
-    // 图片预览器的状态
+    /**
+     * 图片预览器的状态
+     */
     private int mViewState;
-    // 图片加载器
+    /**
+     * 图片加载器
+     */
     private ImageLoader mImageLoader;
-    // 图片切换监听器
+    /**
+     * 图片切换监听器
+     */
     private OnImageChangedListener mImageChangedListener;
-    // 图片点击监听器
+    /**
+     * 图片点击监听器
+     */
     private OnItemClickListener mItemClickListener;
-    // 图片长按监听器
+    /**
+     * 图片长按监听器
+     */
     private OnItemLongClickListener mItemLongClickListener;
-    // 预览状态监听器
+    /**
+     * 预览状态监听器
+     */
     private OnPreviewStatusListener mPreviewStatusListener;
 
     private @PhotoViewType int mPhotoViewType;
@@ -146,7 +187,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     @Override
     public void onPageSelected(int position) {
         if (indexView.getVisibility() == View.VISIBLE) {
-            indexView.setText((position + 1) + "/" + mImageDataList.size());
+            indexView.setText((position + 1) + "/" + mViewDataList.size());
         }
         final BaseScaleView scaleImageView = getCurrentView();
         if (scaleImageView != null) {
@@ -177,8 +218,8 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      */
     private void handleImageIndex() {
         if (showIndex) {
-            if (mImageDataList != null && mImageDataList.size() > 1) {
-                indexView.setText((mStartPosition + 1) + "/" + mImageDataList.size());
+            if (mViewDataList != null && mViewDataList.size() > 1) {
+                indexView.setText((mStartPosition + 1) + "/" + mViewDataList.size());
                 indexView.setVisibility(View.VISIBLE);
             } else {
                 indexView.setVisibility(View.GONE);
@@ -234,7 +275,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
             itemView.clearImageDragger();
         }
         if (mImageLoader != null) {
-            mImageLoader.displayImage(position, mImageDataList.get(position), imageView != null ? imageView.getImageView() : null);
+            mImageLoader.displayImage(position, mViewDataList.get(position).getImageUrl(), imageView != null ? imageView.getImageView() : null);
         }
         itemView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         return itemView;
@@ -249,11 +290,11 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         if (mPreviewAdapter == null) {
             mPreviewAdapter = new PreviewAdapter(this);
             mPreviewAdapter.setStartView(scaleImageView);
-            mPreviewAdapter.setImageData(mImageDataList);
+            mPreviewAdapter.setImageData(mViewDataList);
             viewPager.setAdapter(mPreviewAdapter);
         } else {
             mPreviewAdapter.setStartView(scaleImageView);
-            mPreviewAdapter.setImageData(mImageDataList);
+            mPreviewAdapter.setImageData(mViewDataList);
             mPreviewAdapter.notifyDataSetChanged();
         }
         viewPager.setCurrentItem(mStartPosition, false);
@@ -354,9 +395,6 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      */
     public void clear() {
         exit();
-        if (mImageDataList != null && mImageDataList.size() > 0) {
-            mImageDataList.clear();
-        }
         if (mViewDataList != null && mViewDataList.size() > 0) {
             mViewDataList.clear();
         }
@@ -369,10 +407,6 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         mPreviewStatusListener = null;
         mImageLoader = null;
         initData();
-    }
-
-    public void setImageData(List list) {
-        mImageDataList = list;
     }
 
     public void setViewData(List<ViewData> list) {

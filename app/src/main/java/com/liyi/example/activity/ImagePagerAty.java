@@ -51,6 +51,7 @@ public class ImagePagerAty extends BaseActivity {
         imagePreview = findViewById(R.id.imagePreivew);
 
         mViewData = new ViewData();
+        mViewData.setImageUrl(Utils.getImageList().get(0));
         mScreenSize = ImageViewerUtil.getScreenSize(this);
         mDefDragger = new WxImageDragger();
         mDefDragger.setBackground(imagePreview.getBackground());
@@ -83,7 +84,7 @@ public class ImagePagerAty extends BaseActivity {
     }
 
     private void loadImage() {
-        GlideUtil.loadImage(this, Utils.getImageList().get(0), new SimpleTarget<Drawable>() {
+        GlideUtil.loadImage(this, mViewData.getImageUrl(), new SimpleTarget<Drawable>() {
             @Override
             public void onLoadCleared(@Nullable Drawable placeholder) {
                 super.onLoadCleared(placeholder);

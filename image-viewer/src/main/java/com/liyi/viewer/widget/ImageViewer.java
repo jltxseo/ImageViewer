@@ -54,12 +54,6 @@ public class ImageViewer extends FrameLayout implements IImageViewer {
     }
 
     @Override
-    public ImageViewer setImageData(List list) {
-        mAttacher.setImageData(list);
-        return this;
-    }
-
-    @Override
     public ImageViewer setViewData(List<ViewData> list) {
         mAttacher.setViewData(list);
         return this;

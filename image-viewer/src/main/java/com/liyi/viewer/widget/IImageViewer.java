@@ -31,14 +31,7 @@ public interface IImageViewer {
     ImageViewer setStartPosition(int position);
 
     /**
-     * 设置图片资源
-     *
-     * @param list
-     */
-    ImageViewer setImageData(List list);
-
-    /**
-     * 设置目标 view 的相关数据
+     * 设置图片资源和目标 view 的相关数据
      *
      * @param list
      */

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseActivity extends Activity {
-    protected List<String> mImageList = new ArrayList<>();
     protected List<ViewData> mViewList = new ArrayList<>();
 
     @Override
@@ -22,9 +21,10 @@ public abstract class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(onBindLayoutResID());
-        mImageList = Utils.getImageList();
+        List<String>  mImageList = Utils.getImageList();
         for (int i = 0, len = mImageList.size(); i < len; i++) {
             ViewData viewData = new ViewData();
+            viewData.setImageUrl(mImageList.get(i));
             mViewList.add(viewData);
         }
         onInit(savedInstanceState);

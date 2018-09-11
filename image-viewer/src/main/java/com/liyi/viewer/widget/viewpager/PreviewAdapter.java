@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.liyi.viewer.ViewData;
 import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewerAttacher;
 
@@ -20,7 +21,7 @@ public class PreviewAdapter extends PagerAdapter {
     // 第一个展示的 View
     private BaseScaleView mStartView;
     // 图片资源
-    private List mImageDataList;
+    private List<ViewData> mImageDataList;
     // itemView 集合（在 itemView 被移除后，会被重复使用）
     private List<BaseScaleView> mActiveViews;
     private ImageViewerAttacher mAttacher;

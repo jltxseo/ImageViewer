@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.liyi.example.R;
+import com.liyi.example.Utils;
 import com.liyi.example.glide.GlideUtil;
 import com.liyi.grid.AutoGridView;
 import com.liyi.grid.adapter.SimpleAutoGridAdapter;
@@ -21,6 +22,8 @@ import com.liyi.viewer.dragger.ImageDraggerType;
 import com.liyi.viewer.listener.OnItemLongClickListener;
 import com.liyi.viewer.widget.ImageViewer;
 import com.liyi.viewer.widget.ScaleImageView;
+
+import java.util.List;
 
 /**
  * 简单的图片预览
@@ -47,6 +50,7 @@ public class SimplePreivewAty extends BaseActivity {
         autoGridView = findViewById(R.id.autoGridView);
 
         mGridAdp = new SimpleAutoGridAdapter();
+        List<String> mImageList = Utils.getImageList();
         mGridAdp.setSource(mImageList);
         mGridAdp.setImageLoader(new SimpleAutoGridAdapter.ImageLoader() {
             @Override
@@ -77,7 +81,6 @@ public class SimplePreivewAty extends BaseActivity {
         });
         imagePreview.doDrag(true);
         imagePreview.setDragType(ImageDraggerType.DRAG_TYPE_WX);
-        imagePreview.setImageData(mImageList);
         imagePreview.setImageLoader(new ImageLoader<String>() {
 
             @Override

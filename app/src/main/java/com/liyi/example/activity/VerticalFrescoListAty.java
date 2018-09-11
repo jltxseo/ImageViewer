@@ -2,25 +2,19 @@ package com.liyi.example.activity;
 
 import android.graphics.Point;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.github.chrisbanes.photoview.PhotoDraweeView;
 import com.liyi.example.R;
 import com.liyi.example.Utils;
 import com.liyi.example.adapter.RecyclerAdp;
-import com.liyi.example.glide.GlideUtil;
 import com.liyi.viewer.ImageLoader;
 import com.liyi.viewer.ImageViewerUtil;
 import com.liyi.viewer.ViewData;
@@ -28,6 +22,8 @@ import com.liyi.viewer.dragger.ImageDraggerType;
 import com.liyi.viewer.listener.OnPreviewStatusListener;
 import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
+
+import java.util.List;
 
 /**
  * 竖向列表页面
@@ -60,12 +56,11 @@ public class VerticalFrescoListAty extends BaseActivity {
         recyclerView.setLayoutManager(mLinearManager);
 
         mAdapter = new RecyclerAdp(1);
-        mImageList = Utils.getImageList();
+        List<String> mImageList = Utils.getImageList();
         mAdapter.setData(mImageList);
         initData();
         imagePreview.doDrag(true);
         imagePreview.setDragType(ImageDraggerType.DRAG_TYPE_WX);
-        imagePreview.setImageData(mImageList);
         imagePreview.setImageLoader(new ImageLoader<String>() {
             @Override
             public void displayImage(final int position, String src, final ImageView imageView) {
@@ -122,11 +117,10 @@ public class VerticalFrescoListAty extends BaseActivity {
     private void initData() {
         mScreenSize = ImageViewerUtil.getScreenSize(this);
         for (int i = 0, len = mViewList.size(); i < len; i++) {
-            ViewData viewData = new ViewData();
+            ViewData viewData = mViewList.get(i);
             viewData.setTargetX(ImageViewerUtil.dp2px(this, 10));
             viewData.setTargetWidth(mScreenSize.x - ImageViewerUtil.dp2px(this, 20));
             viewData.setTargetHeight(ImageViewerUtil.dp2px(this, 200));
-            mViewList.set(i, viewData);
         }
     }
 
@@ -183,7 +177,7 @@ public class VerticalFrescoListAty extends BaseActivity {
                 th1 += ImageViewerUtil.dp2px(this, 210);
             }
             // 计算当前图片下方所有 Item 的总高度
-            for (int i = position + 1; i < mImageList.size(); i++) {
+            for (int i = position + 1; i < mViewList.size(); i++) {
                 // ImageViewerUtil.dp2px(this, 210) 是 Item 的高度
                 th2 += ImageViewerUtil.dp2px(this, 210);
             }

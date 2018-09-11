@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.liyi.example.R;
+import com.liyi.example.Utils;
 import com.liyi.example.glide.GlideUtil;
 import com.liyi.grid.AutoGridView;
 import com.liyi.grid.adapter.SimpleAutoGridAdapter;
@@ -18,6 +19,8 @@ import com.liyi.viewer.listener.OnItemClickListener;
 import com.liyi.viewer.listener.OnPreviewStatusListener;
 import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
+
+import java.util.List;
 
 /**
  * 自定义图片预览
@@ -48,6 +51,7 @@ public class CustomPreviewAty extends BaseActivity {
         tv_cover_index = findViewById(R.id.tv_cover_index);
 
         mGridAdp = new SimpleAutoGridAdapter();
+        List<String> mImageList = Utils.getImageList();
         mGridAdp.setSource(mImageList);
         mGridAdp.setImageLoader(new SimpleAutoGridAdapter.ImageLoader() {
             @Override
@@ -55,8 +59,6 @@ public class CustomPreviewAty extends BaseActivity {
                 GlideUtil.loadImage(CustomPreviewAty.this, source, view);
             }
         });
-        // 设置图片资源
-        imagePreview.setImageData(mImageList);
         // 设置图片加载方式
         imagePreview.setImageLoader(new ImageLoader<String>() {
 

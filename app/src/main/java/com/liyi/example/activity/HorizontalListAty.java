@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.liyi.example.R;
+import com.liyi.example.Utils;
 import com.liyi.example.adapter.RecyclerAdp;
 import com.liyi.example.glide.GlideUtil;
 import com.liyi.viewer.ImageLoader;
@@ -21,6 +22,8 @@ import com.liyi.viewer.ViewData;
 import com.liyi.viewer.listener.OnPreviewStatusListener;
 import com.liyi.viewer.widget.BaseScaleView;
 import com.liyi.viewer.widget.ImageViewer;
+
+import java.util.List;
 
 /**
  * 横向列表页面
@@ -53,9 +56,9 @@ public class HorizontalListAty extends BaseActivity {
         recyclerView.setLayoutManager(mLinearManager);
 
         mAdapter = new RecyclerAdp(0);
+        List<String> mImageList = Utils.getImageList();
         mAdapter.setData(mImageList);
         initData();
-        imagePreview.setImageData(mImageList);
         imagePreview.setImageLoader(new ImageLoader<String>() {
             @Override
             public void displayImage(final int position, String src, final ImageView imageView) {
@@ -74,12 +77,11 @@ public class HorizontalListAty extends BaseActivity {
     private void initData() {
         mScreenSize = ImageViewerUtil.getScreenSize(this);
         for (int i = 0, len = mViewList.size(); i < len; i++) {
-            ViewData viewData = new ViewData();
+            ViewData viewData = mViewList.get(i);
             viewData.setTargetX(0);
             viewData.setTargetY(0);
             viewData.setTargetWidth(mScreenSize.x);
             viewData.setTargetHeight(ImageViewerUtil.dp2px(this, 200));
-            mViewList.set(i, viewData);
         }
     }
 
