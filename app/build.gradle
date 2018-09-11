@@ -43,4 +43,5 @@ dependencies {
     implementation 'com.liyi.view:flowview:1.1.0'
     implementation 'com.liyi.view:auto-gridview:1.0.8'
     implementation project(':image-viewer')
+    implementation 'com.facebook.fresco:fresco:1.3.0'
 }
