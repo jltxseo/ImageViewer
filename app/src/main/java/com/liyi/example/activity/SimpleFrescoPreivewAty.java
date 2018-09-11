@@ -102,7 +102,7 @@ public class SimpleFrescoPreivewAty extends BaseActivity {
                         .startPosition(position)
                         .viewDataList(mViewList)
                         .build();
-                PhotoViewer.startPhotoViewer(SimpleFrescoPreivewAty.this,photoExtParam);
+                PhotoViewer.startDefaultPhotoViewer(SimpleFrescoPreivewAty.this,photoExtParam);
 
             }
         });

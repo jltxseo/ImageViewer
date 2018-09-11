@@ -82,7 +82,7 @@ public class VerticalFrescoListAty extends BaseActivity {
                         .startPosition(position)
                         .viewDataList(mViewList)
                         .build();
-                PhotoViewer.startPhotoViewer(VerticalFrescoListAty.this,photoExtParam);
+                PhotoViewer.startDefaultPhotoViewer(VerticalFrescoListAty.this,photoExtParam);
             }
         });
         recyclerView.setAdapter(mAdapter);
