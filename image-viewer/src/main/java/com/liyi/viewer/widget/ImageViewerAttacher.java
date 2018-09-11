@@ -72,7 +72,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     /**
      * 图片的拖拽模式
      */
-    private int mDragType;
+    private @ImageDraggerType int mDragType;
     /**
      * 是否执行进场动画
      */
@@ -122,6 +122,9 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
      */
     private OnPreviewStatusListener mPreviewStatusListener;
 
+    /**
+     * 最终使用哪种缩放view  PHOTO_IMAGE_VIEW：PhotoImageView    PHOTO_DRAWEE_VIEW：PhotoDraweeView
+     */
     private @PhotoViewType int mPhotoViewType;
 
     public ImageViewerAttacher(FrameLayout frameLayout, AttributeSet attrs) {
@@ -427,6 +430,10 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
 
     public void setDragType(@ImageDraggerType int type) {
         this.mDragType = type;
+    }
+
+    public void setPhotoViewType(@PhotoViewType int viewType) {
+        this.mPhotoViewType = viewType;
     }
 
     public void doEnterAnim(boolean isDo) {

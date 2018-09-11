@@ -84,6 +84,12 @@ public class ImageViewer extends FrameLayout implements IImageViewer {
     }
 
     @Override
+    public ImageViewer setPhotoViewType(int viewType) {
+        mAttacher.setPhotoViewType(viewType);
+        return this;
+    }
+
+    @Override
     public ImageViewer doEnterAnim(boolean isDo) {
         mAttacher.doEnterAnim(isDo);
         return this;

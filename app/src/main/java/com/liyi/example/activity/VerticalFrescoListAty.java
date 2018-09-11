@@ -1,27 +1,20 @@
 package com.liyi.example.activity;
 
 import android.graphics.Point;
-import android.graphics.drawable.Animatable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.widget.ImageView;
 
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.github.chrisbanes.photoview.PhotoDraweeView;
+import com.liyi.example.PhotoViewerLoadFactoryImpl;
 import com.liyi.example.R;
 import com.liyi.example.Utils;
 import com.liyi.example.adapter.RecyclerAdp;
-import com.liyi.viewer.ImageLoader;
 import com.liyi.viewer.ImageViewerUtil;
+import com.liyi.viewer.PhotoExtParam;
+import com.liyi.viewer.PhotoViewer;
 import com.liyi.viewer.ViewData;
 import com.liyi.viewer.dragger.ImageDraggerType;
-import com.liyi.viewer.listener.OnPreviewStatusListener;
-import com.liyi.viewer.widget.BaseScaleView;
-import com.liyi.viewer.widget.ImageViewer;
 
 import java.util.List;
 
@@ -29,7 +22,6 @@ import java.util.List;
  * 竖向列表页面
  */
 public class VerticalFrescoListAty extends BaseActivity {
-    private ImageViewer imagePreview;
     private RecyclerView recyclerView;
     private LinearLayoutManager mLinearManager;
     private RecyclerAdp mAdapter;
@@ -48,7 +40,6 @@ public class VerticalFrescoListAty extends BaseActivity {
     }
 
     private void initView() {
-        imagePreview = findViewById(R.id.imagePreview);
         recyclerView = findViewById(R.id.recyclerview);
 
         mLinearManager = new LinearLayoutManager(this);
@@ -59,59 +50,6 @@ public class VerticalFrescoListAty extends BaseActivity {
         List<String> mImageList = Utils.getImageList();
         mAdapter.setData(mImageList);
         initData();
-        imagePreview.doDrag(true);
-        imagePreview.setDragType(ImageDraggerType.DRAG_TYPE_WX);
-        imagePreview.setImageLoader(new ImageLoader<String>() {
-            @Override
-            public void displayImage(final int position, String src, final ImageView imageView) {
-                final BaseScaleView scaleImageView = (BaseScaleView) imageView.getParent();
-                if (imageView instanceof PhotoDraweeView) {
-                    PhotoDraweeView draweeView = (PhotoDraweeView) imageView;
-                    GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-                    if (hierarchy != null) {
-                        hierarchy.setFadeDuration(300);
-                        hierarchy.setFailureImage(R.drawable.img_viewer_placeholder);
-                    }
-                    draweeView.setHierarchy(hierarchy);
-                    draweeView.setOnLoadListener(new PhotoDraweeView.OnPhotoDraweeViewLoadListener() {
-                        @Override
-                        public void onLoadStarted() {
-                            scaleImageView.showProgess();
-                        }
-
-                        @Override
-                        public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                            scaleImageView.hideProgress();
-                            if (imageInfo != null) {
-                                mViewList.get(position).setImageWidth(imageInfo.getWidth());
-                                mViewList.get(position).setImageHeight(imageInfo.getHeight());
-                            }
-                        }
-
-                        @Override
-                        public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
-                            scaleImageView.hideProgress();
-                            if (imageInfo != null) {
-                                mViewList.get(position).setImageWidth(imageInfo.getWidth());
-                                mViewList.get(position).setImageHeight(imageInfo.getHeight());
-                            }
-                        }
-
-                        @Override
-                        public void onIntermediateImageFailed(String id, Throwable throwable) {
-                            scaleImageView.hideProgress();
-                        }
-
-                        @Override
-                        public void onFailure(String id, Throwable throwable) {
-                            scaleImageView.hideProgress();
-                        }
-                    });
-                    draweeView.setPhotoUri(Uri.parse(src));
-
-                }
-            }
-        });
     }
 
     private void initData() {
@@ -136,75 +74,18 @@ public class VerticalFrescoListAty extends BaseActivity {
                 viewData.setTargetY(location[1]);
                 mViewList.set(position, viewData);
 
-                imagePreview.setStartPosition(position);
-                imagePreview.setViewData(mViewList);
-                imagePreview.watch();
+
+                PhotoExtParam photoExtParam =  new PhotoExtParam.Builder()
+                        .doDrag(true)
+                        .dragType(ImageDraggerType.DRAG_TYPE_WX)
+                        .photoViewerLoadFactory(PhotoViewerLoadFactoryImpl.class)
+                        .startPosition(position)
+                        .viewDataList(mViewList)
+                        .build();
+                PhotoViewer.startPhotoViewer(VerticalFrescoListAty.this,photoExtParam);
             }
         });
         recyclerView.setAdapter(mAdapter);
         mLinearManager.scrollToPositionWithOffset(0, 0);
-
-        imagePreview.setOnPreviewStatusListener(new OnPreviewStatusListener() {
-            @Override
-            public void onPreviewStatus(int state, BaseScaleView imagePager) {
-                if (state == com.liyi.viewer.ImageViewerState.STATE_READY_CLOSE) {
-                    int top = getTop(imagePreview.getCurrentPosition());
-                    ViewData viewData = mViewList.get(imagePreview.getCurrentPosition());
-                    viewData.setTargetY(top);
-                    mViewList.set(imagePreview.getCurrentPosition(), viewData);
-                    imagePreview.setViewData(mViewList);
-                    mLinearManager.scrollToPositionWithOffset(imagePreview.getCurrentPosition(), top);
-                }
-            }
-        });
-    }
-
-    private int getTop(int position) {
-        int top = 0;
-        // 当前图片的高度
-        float imgH = Float.valueOf(mViewList.get(position).getTargetHeight());
-        // 图片距离 imageViewer 的上下边距
-        int dis = (int) ((imagePreview.getHeight() - imgH) / 2);
-        // 如果图片高度大于等于 imageViewer 的高度
-        if (dis <= 0) {
-            return top + dis;
-        } else {
-            float th1 = 0;
-            float th2 = 0;
-            // 计算当前图片上方所有 Item 的总高度
-            for (int i = 0; i < position; i++) {
-                // ImageViewerUtil.dp2px(this, 210) 是 Item 的高度
-                th1 += ImageViewerUtil.dp2px(this, 210);
-            }
-            // 计算当前图片下方所有 Item 的总高度
-            for (int i = position + 1; i < mViewList.size(); i++) {
-                // ImageViewerUtil.dp2px(this, 210) 是 Item 的高度
-                th2 += ImageViewerUtil.dp2px(this, 210);
-            }
-            if (th1 >= dis && th2 >= dis) {
-                return top + dis;
-            } else if (th1 < dis) {
-                return (int) (top + th1);
-            } else if (th2 < dis) {
-                return (int) (recyclerView.getHeight() - imgH);
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * 监听返回键
-     *
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        boolean b = imagePreview.onKeyDown(keyCode, event);
-        if (b) {
-            return b;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }

@@ -1,32 +1,24 @@
 package com.liyi.example.activity;
 
-import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.github.chrisbanes.photoview.PhotoDraweeView;
+import com.liyi.example.PhotoViewerLoadFactoryImpl;
 import com.liyi.example.R;
 import com.liyi.example.Utils;
 import com.liyi.example.glide.GlideUtil;
 import com.liyi.grid.AutoGridView;
 import com.liyi.grid.adapter.SimpleAutoGridAdapter;
-import com.liyi.viewer.ImageLoader;
+import com.liyi.viewer.PhotoExtParam;
+import com.liyi.viewer.PhotoViewer;
 import com.liyi.viewer.ViewData;
 import com.liyi.viewer.dragger.ImageDraggerType;
-import com.liyi.viewer.listener.OnItemLongClickListener;
-import com.liyi.viewer.widget.BaseScaleView;
-import com.liyi.viewer.widget.ImageViewer;
 
 import java.util.List;
 
@@ -34,7 +26,6 @@ import java.util.List;
  * 简单的图片预览
  */
 public class SimpleFrescoPreivewAty extends BaseActivity {
-    private ImageViewer imagePreview;
     private AutoGridView autoGridView;
     private SimpleAutoGridAdapter mGridAdp;
 
@@ -51,7 +42,6 @@ public class SimpleFrescoPreivewAty extends BaseActivity {
     }
 
     private void initView() {
-        imagePreview = findViewById(R.id.imagePreivew);
         autoGridView = findViewById(R.id.autoGridView);
 
         mGridAdp = new SimpleAutoGridAdapter();
@@ -79,58 +69,12 @@ public class SimpleFrescoPreivewAty extends BaseActivity {
                         imageView.setImageDrawable(resource);
                         mViewList.get(position).setImageWidth(resource.getIntrinsicWidth());
                         mViewList.get(position).setImageHeight(resource.getIntrinsicHeight());
-                        imagePreview.setViewData(mViewList);
                     }
                 });
             }
         });
 
-        imagePreview.doDrag(true);
-        imagePreview.setDragType(ImageDraggerType.DRAG_TYPE_WX);
-        imagePreview.setImageLoader(new ImageLoader<String>() {
 
-            @Override
-            public void displayImage(final int position, String src, final ImageView imageView) {
-                final BaseScaleView scaleImageView= (BaseScaleView) imageView.getParent();
-                if (imageView instanceof PhotoDraweeView){
-                    PhotoDraweeView draweeView = (PhotoDraweeView)imageView;
-                    GenericDraweeHierarchy hierarchy = draweeView.getHierarchy();
-                    if (hierarchy != null){
-                        hierarchy.setFadeDuration(300);
-                        hierarchy.setFailureImage(R.drawable.img_viewer_placeholder);
-                    }
-                    draweeView.setHierarchy(hierarchy);
-                    draweeView.setOnLoadListener(new PhotoDraweeView.OnPhotoDraweeViewLoadListener() {
-                        @Override
-                        public void onLoadStarted() {
-                            scaleImageView.showProgess();
-                        }
-
-                        @Override
-                        public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                            scaleImageView.hideProgress();
-                        }
-
-                        @Override
-                        public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
-                            scaleImageView.hideProgress();
-                        }
-
-                        @Override
-                        public void onIntermediateImageFailed(String id, Throwable throwable) {
-                            scaleImageView.hideProgress();
-                        }
-
-                        @Override
-                        public void onFailure(String id, Throwable throwable) {
-                            scaleImageView.hideProgress();
-                        }
-                    });
-                    draweeView.setPhotoUri(Uri.parse(src));
-
-                }
-            }
-        });
     }
 
     private void addListener() {
@@ -151,34 +95,17 @@ public class SimpleFrescoPreivewAty extends BaseActivity {
                         mViewList.set(i, viewData);
                     }
                 }
-                imagePreview.setStartPosition(position);
+                PhotoExtParam photoExtParam =  new PhotoExtParam.Builder()
+                        .doDrag(true)
+                        .dragType(ImageDraggerType.DRAG_TYPE_WX)
+                        .photoViewerLoadFactory(PhotoViewerLoadFactoryImpl.class)
+                        .startPosition(position)
+                        .viewDataList(mViewList)
+                        .build();
+                PhotoViewer.startPhotoViewer(SimpleFrescoPreivewAty.this,photoExtParam);
 
-                imagePreview.setViewData(mViewList);
-                imagePreview.watch();
             }
         });
         autoGridView.setAdapter(mGridAdp);
-        imagePreview.setOnItemLongClickListener(new OnItemLongClickListener() {
-            @Override
-            public void onItemLongClick(int position, View view) {
-                Toast.makeText(SimpleFrescoPreivewAty.this, position + "号被长按", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * 监听返回键
-     *
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        boolean b = imagePreview.onKeyDown(keyCode, event);
-        if (b) {
-            return b;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 }

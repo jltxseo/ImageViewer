@@ -4,6 +4,7 @@ package com.liyi.viewer.widget;
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.chrisbanes.photoview.PhotoViewType;
 import com.liyi.viewer.ImageLoader;
 import com.liyi.viewer.ImageViewerState;
 import com.liyi.viewer.ViewData;
@@ -64,6 +65,12 @@ public interface IImageViewer {
      * @param type
      */
     ImageViewer setDragType(@ImageDraggerType int type);
+
+    /**
+     * 设置使用哪种PhotoView  PhotoImageView或者PhotoDraweeView
+     * @param viewType
+     */
+    ImageViewer setPhotoViewType(@PhotoViewType int viewType);
 
     /**
      * 是否使用进场动画

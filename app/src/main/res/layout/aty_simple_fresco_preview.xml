@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,12 +11,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:grid_row="4" />
-
-    <com.liyi.viewer.widget.ImageViewer
-        android:id="@+id/imagePreivew"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:ivr_photo_view_type="drawee_view"
-        android:background="#000000"
-        android:visibility="gone"  />
 </FrameLayout>
