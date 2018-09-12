@@ -21,7 +21,7 @@ public class PhotoViewer {
      * @param extParam
      */
     public static void startDefaultPhotoViewer(Activity activity,PhotoExtParam extParam){
-        if(activity != null && extParam !=null){
+        if(activity != null && extParam !=null && extParam.getViewDataList() != null && extParam.getViewDataList().size() > 0){
             Intent intent = new Intent();
             intent.setClass(activity,PhotoViewerActivity.class);
             intent.putExtra(PhotoViewerActivity.KEY_PHOTO_PARAM,extParam);
@@ -47,7 +47,7 @@ public class PhotoViewer {
      * @param activity
      * @param viewData
      */
-    public static void startDefaultPhotoViewer(Activity activity, ViewData viewData,Class<? extends IPhotoViewerLoadFactory> val){
+    public static void startDefaultPhotoViewer(Activity activity, ViewData viewData, Class<? extends IPhotoViewerLoadFactory> val){
         if(activity != null && viewData != null){
             List<ViewData> viewDataList = new ArrayList<>();
             viewDataList.add(viewData);
@@ -72,7 +72,7 @@ public class PhotoViewer {
      * @param viewDataList
      * @param startPos
      */
-    public static void startDefaultPhotoViewer(Activity activity, List<ViewData> viewDataList, int startPos,Class<? extends IPhotoViewerLoadFactory> val){
+    public static void startDefaultPhotoViewer(Activity activity, List<ViewData> viewDataList, int startPos, Class<? extends IPhotoViewerLoadFactory> val){
         if(activity != null && viewDataList != null && viewDataList.size() > 0){
             PhotoExtParam photoExtParam =  new PhotoExtParam.Builder()
                     .doDrag(true)
@@ -84,4 +84,5 @@ public class PhotoViewer {
             startDefaultPhotoViewer(activity,photoExtParam);
         }
     }
+
 }

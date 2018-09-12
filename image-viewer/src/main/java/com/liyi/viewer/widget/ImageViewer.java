@@ -222,8 +222,19 @@ public class ImageViewer extends FrameLayout implements IImageViewer {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if(mAttacher != null){
+            mAttacher.onAttachedToWindow();
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        if(mAttacher != null){
+            mAttacher.onDetachedFromWindow();
+        }
         clear();
     }
 }

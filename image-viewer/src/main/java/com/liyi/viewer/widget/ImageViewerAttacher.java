@@ -72,7 +72,8 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     /**
      * 图片的拖拽模式
      */
-    private @ImageDraggerType int mDragType;
+    private @ImageDraggerType
+    int mDragType;
     /**
      * 是否执行进场动画
      */
@@ -125,7 +126,12 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     /**
      * 最终使用哪种缩放view  PHOTO_IMAGE_VIEW：PhotoImageView    PHOTO_DRAWEE_VIEW：PhotoDraweeView
      */
-    private @PhotoViewType int mPhotoViewType;
+    private @PhotoViewType
+    int mPhotoViewType;
+    /**
+     * 图库控件是否被剥离窗口
+     */
+    private boolean isAttachWindow;
 
     public ImageViewerAttacher(FrameLayout frameLayout, AttributeSet attrs) {
         this.container = frameLayout;
@@ -315,26 +321,28 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     }
 
     public void enterWithAnim(final BaseScaleView scaleImageView) {
-        viewPager.setScrollable(false);
-        scaleImageView.setPosition(mStartPosition);
-        scaleImageView.setViewData(mViewDataList.get(mStartPosition));
-        scaleImageView.setDuration(mDuration);
-        scaleImageView.setDoBackgroundAlpha(false);
-        scaleImageView.start(new TransitionCallback() {
+        if(mViewDataList != null && mStartPosition >=0 && mStartPosition < mViewDataList.size()){
+            viewPager.setScrollable(false);
+            scaleImageView.setPosition(mStartPosition);
+            scaleImageView.setViewData(mViewDataList.get(mStartPosition));
+            scaleImageView.setDuration(mDuration);
+            scaleImageView.setDoBackgroundAlpha(false);
+            scaleImageView.start(new TransitionCallback() {
 
-            @Override
-            public void onTransitionRunning(float progress) {
-                super.onTransitionRunning(progress);
-                setBackgroundAlpha((int) (progress * 255));
-                setPreviewStatus(ImageViewerState.STATE_OPENING, scaleImageView);
-            }
+                @Override
+                public void onTransitionRunning(float progress) {
+                    super.onTransitionRunning(progress);
+                    setBackgroundAlpha((int) (progress * 255));
+                    setPreviewStatus(ImageViewerState.STATE_OPENING, scaleImageView);
+                }
 
-            @Override
-            public void onTransitionEnd() {
-                super.onTransitionEnd();
-                enter(scaleImageView);
-            }
-        });
+                @Override
+                public void onTransitionEnd() {
+                    super.onTransitionEnd();
+                    enter(scaleImageView);
+                }
+            });
+        }
     }
 
     private void enter(BaseScaleView scaleImageView) {
@@ -343,6 +351,14 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
         viewPager.setScrollable(true);
         setPreviewStatus(ImageViewerState.STATE_COMPLETE_OPEN, scaleImageView);
         setPreviewStatus(ImageViewerState.STATE_WATCHING, scaleImageView);
+    }
+
+    protected void onAttachedToWindow() {
+        isAttachWindow = true;
+    }
+
+    protected void onDetachedFromWindow() {
+        isAttachWindow = false;
     }
 
     /**
@@ -359,31 +375,34 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
     }
 
     public void exitWithAnim() {
-        viewPager.setScrollable(false);
-        indexView.setVisibility(View.GONE);
         final int position = getCurrentPosition();
-        final ViewData viewData = mViewDataList.get(position);
-        final BaseScaleView scaleImageView = getCurrentView();
-        if(scaleImageView != null){
-            scaleImageView.setPosition(position);
-            scaleImageView.setViewData(viewData);
-            scaleImageView.setDuration(mDuration);
-            scaleImageView.setDoBackgroundAlpha(false);
-            scaleImageView.cancel(new TransitionCallback() {
-                @Override
-                public void onTransitionRunning(float progress) {
-                    super.onTransitionRunning(progress);
-                    setBackgroundAlpha((int) ((1 - progress) * 255));
-                    setPreviewStatus(ImageViewerState.STATE_CLOSING, scaleImageView);
-                }
+        if(mViewDataList != null && position >=0 && position < mViewDataList.size()){
+            viewPager.setScrollable(false);
+            indexView.setVisibility(View.GONE);
+            final ViewData viewData = mViewDataList.get(position);
+            final BaseScaleView scaleImageView = getCurrentView();
+            if(scaleImageView != null){
+                scaleImageView.setPosition(position);
+                scaleImageView.setViewData(viewData);
+                scaleImageView.setDuration(mDuration);
+                scaleImageView.setDoBackgroundAlpha(false);
+                scaleImageView.cancel(new TransitionCallback() {
+                    @Override
+                    public void onTransitionRunning(float progress) {
+                        super.onTransitionRunning(progress);
+                        setBackgroundAlpha((int) ((1 - progress) * 255));
+                        setPreviewStatus(ImageViewerState.STATE_CLOSING, scaleImageView);
+                    }
 
-                @Override
-                public void onTransitionEnd() {
-                    super.onTransitionEnd();
-                    exit();
-                }
-            });
+                    @Override
+                    public void onTransitionEnd() {
+                        super.onTransitionEnd();
+                        exit();
+                    }
+                });
+            }
         }
+
 
     }
 
@@ -551,7 +570,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
          */
         @Override
         public void onClick(View v) {
-            if (!scaleImageView.isImageAnimRunning() && !scaleImageView.isImageDragging()) {
+            if (!scaleImageView.isImageAnimRunning() && !scaleImageView.isImageDragging() && isAttachWindow) {
                 if (mItemClickListener != null) {
                     final boolean result = mItemClickListener.onItemClick(scaleImageView.getPosition(), scaleImageView.getImageView());
                     // 判断是否消费了单击事件，如果消费了，则单击事件的后续方法不执行
@@ -568,7 +587,7 @@ public class ImageViewerAttacher implements ViewPager.OnPageChangeListener {
          */
         @Override
         public boolean onLongClick(View v) {
-            if (!scaleImageView.isImageAnimRunning() && !scaleImageView.isImageDragging() && mItemLongClickListener != null) {
+            if (!scaleImageView.isImageAnimRunning() && !scaleImageView.isImageDragging() && mItemLongClickListener != null && isAttachWindow) {
                 mItemLongClickListener.onItemLongClick(scaleImageView.getPosition(), scaleImageView.getImageView());
                 return true;
             }
